@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Polibus
 {
@@ -76,41 +73,70 @@ namespace Polibus
                     indexArray[idx + text.Length] = FindSymbolInMatrix(text[idx], keyMatrix).currentJ;
                 }
             }
-           
+
             return indexArray;
 
         }
-        static string getEncrypedText(int[] indexArray,char[,] keyMatrix)
+        static void printIndex(int[] indexArray)
+        {
+            for (int i = 0; i < indexArray.Length; i++)
+            {
+                Console.Write(indexArray[i] + "  ");
+                if (i ==indexArray.Length/2-1)
+                {
+                    Console.WriteLine();
+                }
+            }
+            Console.WriteLine();
+        }
+        static string getEncrypedText(int[] indexArray, char[,] keyMatrix)
         {
             string returnString = "";
-            for (int i = 0; i < indexArray.Length; i=i+2)
+            for (int i = 0; i < indexArray.Length; i = i + 2)
             {
                 returnString += keyMatrix[indexArray[i], indexArray[i + 1]].ToString();
+            }
+          
+            return returnString;
+        }
+        static string getDecodeText(string encryptText,char[,] keyMatrix)
+        {
+            string returnString = "";
+            int idx = 0;
+            int[] indexArray = new int[encryptText.Length * 2];
+
+            for (int i = 0; i < encryptText.Length; i++)
+            {
+                if (FindSymbolInMatrix(encryptText[i], keyMatrix).Found)
+                {
+                    indexArray[idx] = FindSymbolInMatrix(encryptText[i], keyMatrix).currentI;
+                    indexArray[idx + 1] = FindSymbolInMatrix(encryptText[i], keyMatrix).currentJ;
+                    idx +=2;
+                }
+            }
+            for (int i = 0; i < indexArray.Length/2; i++)
+            {
+                returnString += keyMatrix[indexArray[i], indexArray[i + encryptText.Length]].ToString();
             }
             return returnString;
         }
         static void Main(string[] args)
         {
             string key, text;
-            //key = Normalize("You are right");
-            //text = "Get your pass".Replace(" ", string.Empty).ToLower();
-            //var keyArray = CreateMatrixWithKey(key);
-            //var indexArray = CreateIndexArray(text, keyArray);
-
-            //Console.WriteLine(getEncrypedText(indexArray, keyArray));
-
-
-
-            Console.WriteLine("Write your text");
-            text = Console.ReadLine().Replace(" ", string.Empty).ToLower();
-            Console.WriteLine("Write your key");
-            key = Normalize(Console.ReadLine());
+            key = Normalize("You are right");
+            text = "Get your pass".Replace(" ", string.Empty).ToLower();
             var keyArray = CreateMatrixWithKey(key);
             var indexArray = CreateIndexArray(text, keyArray);
-
-            Console.WriteLine(getEncrypedText(indexArray, keyArray));
-
-
+            var encyptText = getEncrypedText(indexArray, keyArray);
+            Console.WriteLine(encyptText);
+            Console.WriteLine(getDecodeText(getEncrypedText(indexArray,keyArray),keyArray));
+            //Console.WriteLine("Write your text");
+            //text = Console.ReadLine().Replace(" ", string.Empty).ToLower();
+            //Console.WriteLine("Write your key");
+            //key = Normalize(Console.ReadLine());
+            //var keyArray = CreateMatrixWithKey(key);
+            //var indexArray = CreateIndexArray(text, keyArray); 
+            //Console.WriteLine(getEncrypedText(indexArray, keyArray));
         }
     }
 }
