@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Polibus
+namespace PolibusLogic
 {
-
-    class Program
+    public class MyPolibus
     {
-        struct Cordinate
+        public struct Cordinate
         {
             public bool Found { get; set; }
             public int currentI { get; set; }
@@ -42,7 +44,7 @@ namespace Polibus
             }
             return keyMatrix;
         }
-        static Cordinate FindSymbolInMatrix(char a, char[,] keyMatrix)
+        public static Cordinate FindSymbolInMatrix(char a, char[,] keyMatrix)
         {
             for (int i = 0; i < 5; i++)
             {
@@ -61,7 +63,7 @@ namespace Polibus
             }
             return new Cordinate() { Found = false };
         }
-        static int[] CreateIndexArray(string text, char[,] keyMatrix)
+        public static int[] CreateIndexArray(string text, char[,] keyMatrix)
         {
             int[] indexArray = new int[text.Length * 2];
 
@@ -77,7 +79,7 @@ namespace Polibus
             return indexArray;
 
         }
-        static void printIndex(int[] indexArray)
+        public static void printIndex(int[] indexArray)
         {
             for (int i = 0; i < indexArray.Length; i++)
             {
@@ -89,7 +91,7 @@ namespace Polibus
             }
             Console.WriteLine();
         }
-        static string getEncrypedText(int[] indexArray, char[,] keyMatrix)
+        public static string getEncrypedText(int[] indexArray, char[,] keyMatrix)
         {
             string returnString = "";
             for (int i = 0; i < indexArray.Length; i = i + 2)
@@ -99,7 +101,7 @@ namespace Polibus
 
             return returnString;
         }
-        static string getDecodeText(string encryptText, char[,] keyMatrix)
+        public static string getDecodeText(string encryptText, char[,] keyMatrix)
         {
             string returnString = "";
             int idx = 0;
@@ -119,43 +121,6 @@ namespace Polibus
                 returnString += keyMatrix[indexArray[i], indexArray[i + encryptText.Length]].ToString();
             }
             return returnString;
-        }
-        static void Main(string[] args)
-        {
-            int a;
-            string key, text;
-            char[,] keyArray;
-            int[] indexArray;
-            //key ->You are right"
-            //text ->Get your pass
-            //encryptText->ieyarwrokpy  
-            do
-            {
-                Console.WriteLine("\"1\":Encrypt text \n\"2\":Decrypt text \n\"3\":Exit  ");
-                int.TryParse(Console.ReadLine(), out a);
-                switch (a)
-                {
-                    case 1:
-                        Console.WriteLine("Write your text");
-                        text = Console.ReadLine().Replace(" ", string.Empty).ToLower();
-                        Console.WriteLine("Write your key");
-                        key = Normalize(Console.ReadLine());
-                        keyArray = CreateMatrixWithKey(key);
-                        indexArray = CreateIndexArray(text, keyArray);
-                        Console.WriteLine("Your encrypted text: " + getEncrypedText(indexArray, keyArray));
-                        break;
-                    case 2:
-                        Console.WriteLine("Write your encrypte text");
-                        text = Console.ReadLine().Replace(" ", string.Empty).ToLower();
-                        Console.WriteLine("Write your key");
-                        key = Normalize(Console.ReadLine());
-                        keyArray = CreateMatrixWithKey(key);
-                        Console.WriteLine("Your decrypted text: " + getDecodeText(text, keyArray));
-                        break;
-                    default:
-                        break;
-                }
-            } while (a != 3);
         }
     }
 }
